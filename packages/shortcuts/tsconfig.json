@@ -1,0 +1,19 @@
+{
+  "extends": "tsconfig/base.json",
+  "include": [
+    "index.ts",
+    "src/*"
+  ],
+  "exlude": [
+    "dist",
+    "build",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "declaration": true,
+    "lib": [
+      "ES2017",
+      "DOM"
+    ]
+  }
+}
