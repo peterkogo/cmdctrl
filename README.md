@@ -25,12 +25,12 @@ Further goals:
 
 ## Repos
 
-### @cmdctrl/shortcuts
+### [@cmdctrl/shortcuts](/packages/shortcuts/)
 - vanilla javascript
 - detecting key combinations
 - resolving key combinations
 - tracking mounted keymaps & handlers
 
-### @cmdctrl/svelte
+### [@cmdctrl/svelte](/frameworks/svelte/)
 - prefer vanilla js over svelte where possible
 - easy usage over actions & components
