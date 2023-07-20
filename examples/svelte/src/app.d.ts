@@ -10,7 +10,7 @@ declare global {
 
 	namespace svelteHTML {
 		interface HTMLAttributes<T> {
-			'on:cmdctrl'?: import('@cmdctrl/svelte').CmdCtrlEvent;
+			'on:combo'?: import('@cmdctrl/svelte').ComboEvent;
 		}
 	}
 }

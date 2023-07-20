@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CmdController, pressedKeys } from '@cmdctrl/svelte';
+	import { ComboMaster, pressedKeys } from '@cmdctrl/svelte';
 
 	const keyMap = {
 		COPY: {
@@ -21,12 +21,12 @@
 	};
 </script>
 
-<CmdController {keyMap} {handlers}>
+<ComboMaster {keyMap} {handlers}>
 	<!-- Example for handling events by hand -->
 	<div
 		class="full"
 		tabindex="-1"
-		on:cmdctrl={(event) => {
+		on:combo={(event) => {
 			if (event.detail.action === 'COPY') {
 				event.stopPropagation();
 				console.log(`Manual: ${event.detail.action} handled`);
@@ -41,7 +41,7 @@
 			</div>
 		{/each}
 	</div>
-</CmdController>
+</ComboMaster>
 
 <style>
 	.full {

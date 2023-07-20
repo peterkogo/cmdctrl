@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { Resolver, type Keymap, type Handlers } from '@cmdctrl/shortcuts';
-	import { detector } from './actions.js';
+	import { comboDetector } from './actions.js';
 	import { pressedKeys } from './stores.js';
+	import type { ComboAttachEvent } from './types.js';
 
-	export let keyMap: Keymap | null;
-	export let handlers: Handlers | null;
+	export let keyMap: Keymap | undefined = undefined;
+	export let handlers: Handlers | undefined = undefined;
 
 	let resolver: Resolver | undefined;
 
@@ -16,7 +17,7 @@
 	}
 
 	function handleMatch(action: string) {
-		const event = new CustomEvent('cmdctrl', {
+		const event = new CustomEvent('combo', {
 			detail: {
 				action
 			},
@@ -39,11 +40,16 @@
 </script>
 
 <svelte:window
-	use:detector={update}
-	on:cmdctrl={(action) => {
-		// console.log('CmdController: ', action);
-		if (handlers && handlers[action.detail.action]) {
-			console.log(`CmdController: ${action.detail.action} handled`);
+	use:comboDetector={update}
+	on:comboAttach={(event) => {
+		/*TODO*/
+	}}
+	on:comboDetach={(event) => {
+		/*TODO*/
+	}}
+	on:combo={(event) => {
+		if (handlers && handlers[event.detail.action]) {
+			console.log(`CmdController: ${event.detail.action} handled`);
 		}
 	}}
 />

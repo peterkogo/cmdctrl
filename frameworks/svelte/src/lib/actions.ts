@@ -1,10 +1,11 @@
+import { createEventDispatcher } from 'svelte';
 import { Detector } from '@cmdctrl/shortcuts';
-import type { Action } from 'svelte/action';
 
+import type { Action } from 'svelte/action';
 import type { Handlers, Keymap } from '@cmdctrl/shortcuts'
 
 
-export const detector: Action<Window | HTMLElement, (keys: string[]) => void> = (
+export const comboDetector: Action<Window | HTMLElement, (keys: string[]) => void> = (
     node,
     handleUpdate: (keys: string[]) => void
 ) => {
@@ -16,54 +17,35 @@ export const detector: Action<Window | HTMLElement, (keys: string[]) => void> = 
     };
 };
 
+type comboActionOptions = { keyMap?: Keymap, handlers?: Handlers }
 
-import { createEventDispatcher } from 'svelte';
-const dispatch = createEventDispatcher<{
-    cmdctrlRegisterKeymap: {
-        keymap: Keymap,
-        ref: HTMLElement
-    },
-    cmdctrlDeregisterKeymap: {
-        ref: HTMLElement
-    },
-    cmdctrlRegisterHandler: {
-        handlers: Handlers,
-        ref: HTMLElement
-    },
-    cmdctrlDeregisterHandler: {
-        ref: HTMLElement
-    }
-}>()
-
-type cmdctrlActionOptions = { keyMap: Keymap | undefined, handlers: Handlers | undefined }
-// type cmdctrlActionOptions = (keys: string[]) => void
-
-export const cmdctrl: Action<HTMLElement, cmdctrlActionOptions> = (
+export const combo: Action<HTMLElement, comboActionOptions> = (
     node,
-    options: cmdctrlActionOptions
+    options: comboActionOptions
 ) => {
-    if (options.keyMap) {
-        dispatch('cmdctrlRegisterKeymap', { keymap: options.keyMap, ref: node })
-    }
-    if (options.handlers) {
-        dispatch('cmdctrlRegisterHandler', { handlers: options.handlers, ref: node })
-    }
+    // TODO?: Warning if neither keymap nor handler attached
+    node.dispatchEvent(
+        new CustomEvent('comboAttach', {
+            detail: { ref: node, keymap: options.keyMap, handlers: options.handlers },
+            bubbles: true
+        })
+    )
     return {
         destroy: () => {
-            if (options.keyMap) {
-                dispatch('cmdctrlDeregisterKeymap', { ref: node })
-            }
-            if (options.handlers) {
-                dispatch('cmdctrlDeregisterHandler', { ref: node })
-            }
+            node.dispatchEvent(
+                new CustomEvent('comboDetach', {
+                    detail: { ref: node },
+                    bubbles: true
+                })
+            )
         },
         update: (options) => {
-            if (options.keyMap) {
-                dispatch('cmdctrlRegisterKeymap', { keymap: options.keyMap, ref: node })
-            }
-            if (options.handlers) {
-                dispatch('cmdctrlRegisterHandler', { handlers: options.handlers, ref: node })
-            }
+            node.dispatchEvent(
+                new CustomEvent('comboAttach', {
+                    detail: { ref: node, keymap: options.keyMap, handlers: options.handlers },
+                    bubbles: true
+                })
+            )
         }
     }
 }
